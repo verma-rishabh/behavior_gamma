@@ -1,0 +1,46 @@
+# Compiled object files
+*.o
+*.obj
+
+# Compiled static libraries
+*.lib
+*.a
+
+# Compiled dynamic libraries
+*.so
+*.dylib
+*.dll
+
+# Executable files
+*.exe
+*.out
+*.app
+
+# ESP-IDF build output directories
+build/
+
+# Partition table binary
+partition_table.bin
+
+# Flash binaries
+*.bin
+
+# Core dumps
+core
+
+# Logs
+*.log
+
+# Python virtual environment
+venv/
+.env/
+
+# IDE specific files
+.vscode/
+.idea/
+
+# macOS specific files
+.DS_Store
+
+# Windows specific files
+Thumbs.db
