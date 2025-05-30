@@ -5,6 +5,9 @@
 #include "driver/spi_master.h"
 #include "dac.h"   
 #include "init.h" 
+
+int channel_map[] = {3,1,4,2};
+
 //// Not used 
 uint16_t voltage_to_dac_value(float voltage, float vref) {
     voltage = voltage < 0 ? 0 : (voltage > vref ? vref : voltage);
@@ -49,7 +52,8 @@ void gpio_analog_write_task(void *param) {
     uint16_t *gpio_params = (uint16_t *)param;
     uint8_t channel = gpio_params[0];
     uint16_t voltage = gpio_params[1];
-    channel = channel - 1; // Convert to zero-based index
+    channel = channel_map[channel-1] - 1; // Convert to zero-based index
+    
     set_dac_channel(spi, channel, voltage);
 
     // Delete the task after execution

@@ -52,7 +52,7 @@ void uart_task(void *param) {
                     gpio_params[0] = (int)getchar_unlocked(); // GPIO pin number
                     gpio_params[1] = (int)getchar_unlocked(); // Upper byte
                     gpio_params[1] = (gpio_params[1] << 8) | getchar_unlocked();  // Lower byte
-                    ERROR_CHECK(xTaskCreate(gpio_analog_write_task, "gpio_digital_write_task", 2048, gpio_params, 5, NULL) != pdPASS); //PdPASS is 1
+                    ERROR_CHECK(xTaskCreate(gpio_analog_write_task, "gpio_analog_write_task", 2048, gpio_params, 5, NULL) != pdPASS); //PdPASS is 1
                 }
 
             }

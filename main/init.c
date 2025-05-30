@@ -156,7 +156,7 @@ void init_task(void) {
         .duty_cycle_pos = 128,
         .cs_ena_pretrans = 1,
         .cs_ena_posttrans = 1,
-        .clock_speed_hz = SPI_MASTER_FREQ_8M, // Clock speed (1 MHz)
+        .clock_speed_hz = SPI_MASTER_FREQ_8M, // Clock speed (8 MHz)
         .spics_io_num = SPI_SYNC,
         .queue_size = 1,
     };
