@@ -7,6 +7,7 @@
 #include "esp_adc/adc_cali_scheme.h"
 #include "esp_log.h"
 #include "init.h"
+#include "driver/usb_serial_jtag.h"
 // #include "pin_config.h"
 
 
@@ -24,13 +25,16 @@ void gpio_digital_write_task(void *param) {
     int8_t mapped_pin = DIGITAL_OUTPUT[pin_number-1]; // Convert to GPIO number
     int16_t ret = (int16_t)gpio_set_level(mapped_pin, status);
     if (xSemaphoreTake(uart_mutex, portMAX_DELAY) == pdTRUE) {
-        putchar(0x33);                                                                  //Start of message                            
-        putchar(0x00);                                                                  //Pin type
-        putchar(0x01);                                                                  //Mode
-        putchar(pin_number);                                                            //Pin number                                          
-        putchar(ret >> 8);                                                          //Voltage high byte                                 
-        putchar(ret & 0x0F);                                                        //Voltage low byte                                          
-        putchar(0x0A);                                                                  //End of message                                    
+        uint8_t data_[7]={0};
+        data_[0] = 0x33;                                                              //Start of message
+        data_[1] = 0x00;                                                              //Pin type
+        data_[2] = 0x01;                                                              //Mode
+        data_[3] = pin_number;                                                        //Pin number
+        data_[4] = ret >> 8;                                                        //Voltage high byte
+        data_[5] = ret & 0x0F;                                                      //Voltage low byte
+        data_[6] = 0x0A;                                                              //End of message
+        // Send the data over USB Serial JTAG                                                   
+        usb_serial_jtag_write_bytes((const char *) data_, 7, 5 / portTICK_PERIOD_MS);                               
         xSemaphoreGive(uart_mutex);
     }
     // Delete the task after execution
@@ -43,13 +47,16 @@ void gpio_digital_read_task(void *param) {
     int8_t mapped_pin = DIGITAL_INPUT[pin_number-1]; // Convert to GPIO number
     uint16_t state = (uint16_t)gpio_get_level(mapped_pin);
     if (xSemaphoreTake(uart_mutex, portMAX_DELAY) == pdTRUE) {
-        putchar(0x33);                                                                  //Start of message                            
-        putchar(0x00);                                                                  //Pin type
-        putchar(0x00);                                                                  //Mode
-        putchar(pin_number);                                                            //Pin number                                          
-        putchar(state >> 8);                                                          //Voltage high byte                                 
-        putchar(state & 0x0F);                                                        //Voltage low byte                                          
-        putchar(0x0A);                                                                  //End of message                                    
+        uint8_t data_[7] = {0}; // Initialize data array
+        data_[0] = 0x33;                                                                  //Start of message
+        data_[1] = 0x00;                                                                  //Pin type
+        data_[2] = 0x00;                                                                  //Mode
+        data_[3] = pin_number;                                                            //Pin number
+        data_[4] = state >> 8;                                                          //Voltage high byte
+        data_[5] = state & 0x0F;                                                        //Voltage low byte
+        data_[6] = 0x0A;                                                                  //End of message
+        // Send the data over USB Serial JTAG                                                   
+        usb_serial_jtag_write_bytes((const char *) data_, 7, 5 / portTICK_PERIOD_MS);                                   
         xSemaphoreGive(uart_mutex);
     }
 
@@ -82,13 +89,16 @@ void gpio_analog_read_task(void *param) {
     }
     voltage = (int)((2.8 / 1.8) * voltage);
     if (xSemaphoreTake(uart_mutex, portMAX_DELAY) == pdTRUE) {
-        putchar(0x33);                                                                  //Start of message                            
-        putchar(0x01);                                                                  //Pin type
-        putchar(0x00);                                                                  //Mode
-        putchar(pin_number);                                                            //Pin number                                          
-        putchar(voltage >> 8);                                                          //Voltage high byte                                 
-        putchar(voltage & 0x0F);                                                        //Voltage low byte                                          
-        putchar(0x0A);                                                                  //End of message                                    
+        uint8_t data_[7]={0};
+        data_[0] = 0x33;                                                                  //Start of message
+        data_[1] = 0x01;                                                                  //Pin type
+        data_[2] = 0x00;                                                                  //Mode
+        data_[3] = pin_number;                                                            //Pin number
+        data_[4] = voltage >> 8;                                                          //Voltage high byte
+        data_[5] = voltage & 0x0F;                                                        //Voltage low byte
+        data_[6] = 0x0A;                                                                  //End of message
+        // Send the data over USB Serial JTAG
+        usb_serial_jtag_write_bytes((const char *) data_, 7, 5 / portTICK_PERIOD_MS);                                 
         xSemaphoreGive(uart_mutex);
     }
 

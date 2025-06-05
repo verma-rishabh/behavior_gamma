@@ -5,6 +5,7 @@
 #include "driver/spi_master.h"
 #include "dac.h"   
 #include "init.h" 
+#include "driver/usb_serial_jtag.h"
 
 int channel_map[] = {3,1,4,2};
 
@@ -36,13 +37,16 @@ void set_dac_channel(spi_device_handle_t spi, uint8_t channel, uint16_t dac_valu
     ret = (int16_t)spi_device_transmit(spi, &t);
     ERROR_CHECK(ret);
     if (xSemaphoreTake(uart_mutex, portMAX_DELAY) == pdTRUE) {
-        putchar(0x33);                                                                  //Start of message                            
-        putchar(0x00);                                                                  //Pin type
-        putchar(0x01);                                                                  //Mode
-        putchar(channel);                                                            //Pin number                                          
-        putchar(ret >> 8);                                                          //ret high byte                                 
-        putchar(ret & 0x0F);                                                        //ret low byte                                          
-        putchar(0x0A);                                                                  //End of message                                    
+        uint8_t data_[7] = {0}; // Initialize data array
+        data_[0] = 0x33;                                                                  //Start of message
+        data_[1] = 0x00;                                                                  //Pin type
+        data_[2] = 0x01;                                                                  //Mode
+        data_[3] = channel;                                                                // Pin number
+        data_[4] = ret >> 8;                                                              //ret high byte
+        data_[5] = ret & 0x0F;                                                            //ret low byte
+        data_[6] = 0x0A;                                                                  //End of message      
+        // Send the data over USB Serial JTAG                                                   
+        usb_serial_jtag_write_bytes((const char *) data_, 7, 5 / portTICK_PERIOD_MS);                           
         xSemaphoreGive(uart_mutex);
     }
 

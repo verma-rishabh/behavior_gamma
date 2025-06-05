@@ -8,6 +8,10 @@
 #include "esp_adc/adc_cali.h"
 #include "esp_adc/adc_cali_scheme.h"
 #include "freertos/FreeRTOS.h"
+#include "driver/usb_serial_jtag.h"
+
+#define BUF_SIZE (1024)
+
 
 spi_device_handle_t spi;
 esp_err_t ret;
@@ -103,7 +107,20 @@ void init_adc(void){
 }
 
 
+void init_serial(){
+    // Configure USB SERIAL JTAG
+    usb_serial_jtag_driver_config_t usb_serial_jtag_config = {
+        .rx_buffer_size = BUF_SIZE,
+        .tx_buffer_size = BUF_SIZE,
+    };
 
+    // Disable buffering for stdout to ensure immediate output
+    setvbuf(stdout, NULL, _IONBF, 0);
+
+    ESP_ERROR_CHECK(usb_serial_jtag_driver_install(&usb_serial_jtag_config));
+
+
+}
 
 
 void init_task(void) {
@@ -128,6 +145,7 @@ void init_task(void) {
     gpio_set_direction(ERROR_LED, GPIO_MODE_OUTPUT);
     gpio_set_level(ERROR_LED, 1);
     init_adc(); // Initialize ADC
+    init_serial(); // Initialize USB Serial JTAG
     
     // UART MUTEX
     uart_mutex = xSemaphoreCreateMutex();

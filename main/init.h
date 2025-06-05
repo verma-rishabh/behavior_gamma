@@ -34,6 +34,7 @@ extern adc_cali_handle_t adc2_cali_chan1_handle;
 extern adc_oneshot_unit_handle_t adc1_handle;
 extern adc_oneshot_unit_handle_t adc2_handle;
 extern SemaphoreHandle_t uart_mutex;
+
 // Function declarations
 void init_task(void);
 
