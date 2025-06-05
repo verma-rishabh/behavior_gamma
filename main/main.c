@@ -73,7 +73,7 @@ void uart_task(void *param) {
             }
         
         }
-        vTaskDelay(1 / portTICK_PERIOD_MS);
+        // vTaskDelay(1 / portTICK_PERIOD_MS);
     }
     vTaskDelete(NULL);
    
