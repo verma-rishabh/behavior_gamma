@@ -12,6 +12,7 @@
 #include "dac.h"    
 #include "gpio.h"
 #include "driver/usb_serial_jtag.h"
+#include "input_buffer.h"
 
 
 // Task to establish UART connection
@@ -81,6 +82,6 @@ void uart_task(void *param) {
 
 void app_main() {
     init_task();
-   
-    xTaskCreate(uart_task, "uart_task", 2048*10, NULL, 5, NULL);
+    xTaskCreatePinnedToCore(input_buffer_update_task, "input_buffer_update_task", 2048, NULL, 5, NULL, 0);
+    xTaskCreatePinnedToCore(uart_task, "uart_task", 2048*10, NULL, 5, NULL, 1);
 }

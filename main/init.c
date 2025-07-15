@@ -9,6 +9,7 @@
 #include "esp_adc/adc_cali_scheme.h"
 #include "freertos/FreeRTOS.h"
 #include "driver/usb_serial_jtag.h"
+#include "input_buffer.h"
 
 #define BUF_SIZE (1024)
 
@@ -153,7 +154,8 @@ void init_task(void) {
         ERROR_CHECK(ESP_FAIL);
         return;
     }
-    //init SPI
+    //init read buffer
+    input_buffer_init();
     
     // Configure SPI bus
     spi_bus_config_t buscfg = {

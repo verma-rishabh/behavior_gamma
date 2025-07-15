@@ -8,6 +8,7 @@
 #include "esp_log.h"
 #include "init.h"
 #include "driver/usb_serial_jtag.h"
+#include "input_buffer.h"
 // #include "pin_config.h"
 
 
@@ -44,15 +45,21 @@ void gpio_digital_write_task(void *param) {
 // Task to read GPIO pin state
 void gpio_digital_read_task(void *param) {
     int8_t pin_number = *(int8_t *)param;
+    uint16_t state = 0;
     int8_t mapped_pin = DIGITAL_INPUT[pin_number-1]; // Convert to GPIO number
-    uint16_t state = (uint16_t)gpio_get_level(mapped_pin);
+    uint16_t true_state = (uint16_t)gpio_get_level(mapped_pin);
+    if (xSemaphoreTake(input_buffer_mutex, portMAX_DELAY) == pdTRUE) {
+        state = (uint16_t)input_buffer[pin_number-1].value;
+        input_buffer[pin_number-1].consumed = true;
+        xSemaphoreGive(input_buffer_mutex);
+    }
     if (xSemaphoreTake(uart_mutex, portMAX_DELAY) == pdTRUE) {
         uint8_t data_[7] = {0}; // Initialize data array
         data_[0] = 0x33;                                                                  //Start of message
         data_[1] = 0x00;                                                                  //Pin type
         data_[2] = 0x00;                                                                  //Mode
         data_[3] = pin_number;                                                            //Pin number
-        data_[4] = state >> 8;                                                          //Voltage high byte
+        data_[4] = true_state & 0x0F;                                                          //Voltage high byte
         data_[5] = state & 0x0F;                                                        //Voltage low byte
         data_[6] = 0x0A;                                                                  //End of message
         // Send the data over USB Serial JTAG                                                   
