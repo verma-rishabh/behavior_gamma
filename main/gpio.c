@@ -102,7 +102,7 @@ void gpio_analog_read_task(void *param) {
         data_[2] = 0x00;                                                                  //Mode
         data_[3] = pin_number;                                                            //Pin number
         data_[4] = voltage >> 8;                                                          //Voltage high byte
-        data_[5] = voltage & 0x0F;                                                        //Voltage low byte
+        data_[5] = voltage & 0xFF;                                                        //Voltage low byte
         data_[6] = 0x0A;                                                                  //End of message
         // Send the data over USB Serial JTAG
         usb_serial_jtag_write_bytes((const char *) data_, 7, 5 / portTICK_PERIOD_MS);                                 
