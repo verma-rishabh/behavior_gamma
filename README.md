@@ -19,6 +19,18 @@ The project is built on ESP-IDF (Espressif IoT Development Framework) and utiliz
 
 ## File Structure and Components
 
+### Hardware Design (`hardware/`)
+
+PCB design and manufacturing files for the Behavior Gamma board.
+
+| File/Folder | Description |
+|-------------|-------------|
+| `final.brd` | Eagle PCB board design file |
+| `final.pdf` | PCB layout/schematic PDF |
+| `CAMOutputs/GerberFiles/` | Gerber files for all PCB layers (copper, silkscreen, soldermask, solderpaste, profile) |
+| `CAMOutputs/DrillFiles/` | Drill file for PCB fabrication |
+| `CAMOutputs/Assembly/` | BOM (CSV/TXT) and pick-and-place files for front and back assembly |
+
 ### Core Files
 
 #### 1. `main.c` - Main Application Controller
@@ -285,15 +297,20 @@ When implementing client-side communication:
 
 The Behavior Gamma system is optimized for high-speed, real-time operations with the following performance metrics:
 
-### **Response Times**
-- **Command Processing**: < 1ms response time from command reception to execution
-- **Digital I/O Operations**: < 100μs for read/write operations
-- **Analog Read Operations**: < 500μs including ADC conversion and calibration
-- **SPI DAC Output**: < 200μs for voltage setting with 16-bit resolution
+### **Measured Round-Trip Response Times**
+
+Measured via USB Serial JTAG at 1.5 Mbaud (see `speed_test.ipynb`):
+
+| Operation | Typical |
+|-----------|---------|
+| Digital Write | ~200 µs |
+| Digital Read | ~250 µs |
+| Analog Read (ADC) | ~300 µs |
+| Analog Write (DAC/SPI) | ~400 µs |
 
 ### **Throughput Specifications**
 - **Input Sampling Rate**: 1000 Hz continuous monitoring for all digital inputs
-- **Communication Speed**: USB Serial JTAG up to 12 Mbps effective bandwidth
+- **Communication Speed**: USB Serial JTAG at 1.5 Mbaud (tested)
 - **SPI Interface**: 8 MHz clock for external DAC communication
 - **Concurrent Operations**: Multi-task architecture supports simultaneous I/O operations
 
