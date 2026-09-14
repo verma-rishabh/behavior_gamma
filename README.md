@@ -1,8 +1,8 @@
-# Behavior Gamma - ESP32 GPIO and DAC Control System
+# behaviour-box - ESP32 GPIO and DAC Control System
 
 ## Project Overview
 
-Behavior Gamma is an ESP32-based embedded system designed for real-time GPIO and DAC control through USB Serial JTAG communication. The system provides a comprehensive interface for digital and analog I/O operations, making it suitable for experimental setups, data acquisition, and hardware control applications.
+behaviour-box is an ESP32-based embedded system designed for real-time GPIO and DAC control through USB Serial JTAG communication. The system provides a comprehensive interface for digital and analog I/O operations, making it suitable for experimental setups, data acquisition, and hardware control applications.
 
 ## System Architecture
 
@@ -21,7 +21,7 @@ The project is built on ESP-IDF (Espressif IoT Development Framework) and utiliz
 
 ### Hardware Design (`hardware/`)
 
-PCB design and manufacturing files for the Behavior Gamma board.
+PCB design and manufacturing files for the behaviour-box board.
 
 | File/Folder | Description |
 |-------------|-------------|
@@ -295,7 +295,7 @@ When implementing client-side communication:
 
 ## Performance Characteristics
 
-The Behavior Gamma system is optimized for high-speed, real-time operations with the following performance metrics:
+The behaviour-box system is optimized for high-speed, real-time operations with the following performance metrics:
 
 ### **Measured Round-Trip Response Times**
 
@@ -474,4 +474,4 @@ typedef enum {
 
 These enhancements would further improve the system's performance, reliability, and scalability while maintaining the current architecture's strengths.
 
-This documentation provides a comprehensive overview of the Behavior Gamma system, enabling effective usage, maintenance, and future development.
+This documentation provides a comprehensive overview of the behaviour-box system, enabling effective usage, maintenance, and future development.
