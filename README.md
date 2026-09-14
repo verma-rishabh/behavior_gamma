@@ -2,6 +2,8 @@
 
 ## Project Overview
 
+![Board](hardware/board-1.png)
+
 behaviour-box is an ESP32-based embedded system designed for real-time GPIO and DAC control through USB Serial JTAG communication. The system provides a comprehensive interface for digital and analog I/O operations, making it suitable for experimental setups, data acquisition, and hardware control applications.
 
 ## System Architecture
